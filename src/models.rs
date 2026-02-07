@@ -62,11 +62,16 @@ impl TrackerData {
     }
 
     pub fn subcategory_id(&self, name: &str) -> Option<usize> {
-        self.subcategories_by_name.get(&name.to_lowercase()).copied()
+        self.subcategories_by_name
+            .get(&name.to_lowercase())
+            .copied()
     }
 
     pub fn category_name(&self, id: usize) -> Option<&String> {
-        self.categories.iter().find(|(_, v)| **v == id).map(|(k, _)| k)
+        self.categories
+            .iter()
+            .find(|(_, v)| **v == id)
+            .map(|(k, _)| k)
     }
 
     pub fn subcategory_name(&self, id: usize) -> Option<&String> {

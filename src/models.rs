@@ -112,3 +112,56 @@ pub fn default_tracker_json(currency: &Currency, opening_balance: f64) -> serde_
         "next_subcategory_id": 2
     })
 }
+
+#[derive(Debug)]
+pub enum ResponseContent {
+    Message(String),
+    Record {
+        record: Record,
+        tracker_data: TrackerData,
+        is_update: bool,
+    },
+    List {
+        records: Vec<Record>,
+        tracker_data: TrackerData,
+    },
+    TrackerData(TrackerData),
+    Total(Total),
+    Categories(Vec<(usize, String)>),
+    Subcategories(Vec<(usize, String)>),
+}
+
+#[derive(Debug, Clone)]
+pub struct Total {
+    pub currency: Currency,
+    pub opening_balance: f64,
+    pub income_total: f64,
+    pub expenses_total: f64,
+}
+
+#[derive(Debug)]
+pub struct CliResponse {
+    content: Option<ResponseContent>,
+}
+
+impl CliResponse {
+    pub fn new(content: ResponseContent) -> Self {
+        CliResponse {
+            content: Some(content),
+        }
+    }
+
+    pub fn success() -> Self {
+        CliResponse { content: None }
+    }
+
+    pub fn content(&self) -> Option<&ResponseContent> {
+        self.content.as_ref()
+    }
+
+    pub fn write_to(&self, writer: &mut impl std::io::Write) -> std::io::Result<()> {
+        crate::output::write_response(self, writer)
+    }
+}
+
+pub type CliResult = Result<CliResponse, CliError>;

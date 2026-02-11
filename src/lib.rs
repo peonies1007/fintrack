@@ -1,6 +1,7 @@
 pub mod commands;
 pub mod error;
 pub mod models;
+pub mod output;
 pub mod utils;
 
 pub use error::*;
